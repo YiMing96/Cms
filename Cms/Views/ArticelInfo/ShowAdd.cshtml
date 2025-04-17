@@ -1,0 +1,285 @@
+﻿@{
+    Layout = null;
+}
+<html>
+<head>
+    <link href="/css/tableStyle.css" rel="stylesheet" /><!--添加表格样式-->
+    <script src="/ckeditor/ckeditor.js"></script><!--添加ckeditor编辑器--->
+    <script src="/lib/jquery/dist/jquery.js"></script>
+    <script src="~/js/form-serialize.js"></script>
+    <script src="/js/axios.min.js"></script>
+    <style type="text/css">
+        textarea, select {
+            padding: 2px;
+            border: 1px solid;
+            border-color: #666 #ccc #ccc #666;
+            background: #F9F9F9;
+            color: #333;
+            resize: none;
+            width: 100%;
+        }
+
+        .textbox {
+            padding: 3px;
+            border: 1px solid;
+            border-color: #666 #ccc #ccc #666;
+            background: #F9F9F9;
+            color: #333;
+            resize: none;
+            width: 100%;
+        }
+
+            .textbox:hover, .textbox:focus, textarea:hover, textarea:focus {
+                border-color: #09C;
+                background: #F5F9FD;
+            }
+    </style>
+</head>
+<body>
+    <form id="addForm">
+        <table style="width:auto; margin: 0 auto">
+            <tr>
+                <td>简短标题:</td>
+                <td>
+                    <select name="TitleType" id="TitleType">
+                        <option></option>
+                        <option style="color: green">[图文]</option>
+                        <option style="color: red">[组图]</option>
+                        <option style="color: #990000">[推荐]</option>
+                        <option style="color: #0000FF">[注意]</option>
+                        <option style="color: blue">[公告]</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="text" name="title" maxlength="160" class="textbox" id="title" />
+                </td>
+                <td>
+                    <select name="TitleFontType" id="TitleFontType">
+                        <option value="0">字形</option>
+                        <option value="1">粗体</option>
+                        <option value="2">斜体</option>
+                        <option value="3">粗+斜</option>
+                        <option value="0">规则</option>
+                    </select>
+                </td>
+                <td>
+                    <select name="TitleFontColor" id="TitleFontColor">
+                        <option value="0">颜色</option>
+                        <option value="1">红色</option>
+                        <option value="2">蓝色</option>
+                        <option value="3">绿色</option>
+
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>完整标题:</td>
+                <td colspan="4">
+                    <input type="text" name="Fulltitle" class="textbox" id="Fulltitle" />
+                </td>
+            </tr>
+            <tr>
+                <td>归属栏目:</td>
+                <td colspan="4">
+                    <select name="ArticelClassInfo" id="ArticelClassInfo">
+                        <option value="">--请选择归属栏目--</option>
+
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>关 键 字</td>
+                <td colspan="4">
+                    <input type="text" name="KeyWords" class="textbox" id="KeyWords" />
+                </td>
+            </tr>
+            <tr>
+                <td>文章作者:</td>
+                <td colspan="4">
+                    <input type="text" name="Author" class="textbox" id="Author" />&nbsp;&nbsp;【<a href="javascript:void(0)" class="authorClick">未知</a>】【<a href="javascript:void(0)" class="authorClick">佚名</a>】【<a href="javascript:void(0)" class="authorClick">老王</a>】
+                </td>
+            </tr>
+            <tr>
+                <td>文章来源:</td>
+                <td colspan="4">
+                    <input name="Origin" id="Origin" value="" size="50" class="textbox" type="text">&nbsp;&nbsp;【<a href="javascript:void(0)" class="originInfo">不详</a>】【<a href="javascript:void(0)" class="originInfo">本站原创</a>】【<a href="javascript:void(0)" class="originInfo">互联网</a>】
+                </td>
+            </tr>
+            <tr>
+                <td>文章导读</td>
+                <td colspan="4">
+                    <textarea class="textbox" name="Intro" style="width: 95%; height: 80px"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>文章内容</td>
+                <td colspan="4">
+                    <textarea class="textbox" id="ArticelContent" name="ArticelContent1" rows="30" cols="40" style="width: 95%; height: 80px"></textarea>
+                    <script type="text/javascript">
+                        //<![CDATA[
+                        // Replace the <textarea id="editor1"> with an CKEditor instance.
+                        // 这里是给id属性值为ArticleContent的textare添加富文本编辑器
+                        var editor = CKEDITOR.replace('ArticelContent');
+                        //]]>
+                    </script>
+
+                    <textarea class="textbox" name="ArticelContent" id="txtArticelContent" rows="30" cols="40" style="display:none"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>图片地址:</td>
+                <td colspan="4">
+                    <div id="content">
+                        <img id="imgSrc" width="50px" height="50px" />
+
+                        <input class="mini-htmlfile" type="file" id="iptFile" accept="image/*" style="display:none" />
+                        <button class="btn btn-primary" id="btnChoose">选择 & 上传图片</button>
+                    </div>
+
+
+                    <input name="PhotoUrl" id="PhotoUrl" value="" type="hidden">
+                    <input name="AddWaterFlag" id="AddWaterFlag" value="1" type="checkbox">添加水印
+                    <input name="InsertEditContent" id="InsertEditContent" value="1" type="checkbox">图片是否插入编辑器
+                </td>
+            </tr>
+        </table>
+    </form>
+    <div style="text-align:center;padding:10px;">
+        <button style="width:60px;margin-right:20px;" id="btnOk">确定</button>
+        <button onclick="onCancel()" style="width:60px;">取消</button>
+    </div>
+</body>
+</html>
+<script>
+    const btnChoose = document.querySelector("#btnChoose");
+    const iptFile = document.querySelector("#iptFile");
+    const addWaterFlag = document.querySelector("#AddWaterFlag");
+
+        // const authorClick = document.querySelector(".authorClick");
+        // authorClick.addEventListener("click", function () {
+        //     document.querySelector("#Author").value = this.innerHTML;
+
+
+    $(".authorClick" ).click(function () {
+        $( "#Author" ).val($(this).text());
+    })
+
+    $( ".originInfo" ).click(function () {
+        $( "#Origin" ).val($(this).text());
+    })
+
+    // 图片上传
+    btnChoose.addEventListener("click", function (e) {
+        e.preventDefault();
+        iptFile.click();
+    })
+    iptFile.addEventListener("change", function () {
+        if (!this.files[0]) {
+            return;
+        }
+        const fd = new FormData();
+        fd.append("avator", this.files[0]);
+        let url = "/articelInfo/fileUpload";
+        if (addWaterFlag.checked) {
+            url = url + "?waterFlag=1"
+        }
+
+        axios({
+            method: "post",
+            url,
+            data: fd
+        }).then(function ({ data: res }) {
+            if (res.code === 200) {
+                const imgSrc = document.querySelector("#imgSrc");
+                const photoUrl = document.querySelector("#PhotoUrl");
+                const insertEditContent = document.querySelector("#InsertEditContent");
+                const path = "/" + res.path;
+                console.log("path==", path);
+                imgSrc.src = path;
+                photoUrl.value = path;
+                if (insertEditContent.checked) {
+                    var oEditor = CKEDITOR.instances.ArticelContent;//找到编辑器
+                    if (oEditor.mode == 'wysiwyg') { // what you see is what you get
+                        var img = "<img src='" + path + "'/>";
+                        oEditor.insertHtml(img);//将上传成功的图片插入到编辑器中。
+                    }
+                    else {
+                        alert('You must be in WYSIWYG mode!');
+                    }
+
+                }
+
+
+            }
+        })
+
+    });
+    //获取文章类别
+    axios({
+        method: "get",
+        url: "/articelInfo/getCategory"
+    }).then(function ({ data: res }) {
+        if (res.code === 200) {
+            // console.log("categories==",res.data);
+            const arr = tranListToTreeData(res.data, 0);// 第一个参数：具体数据，二：根节点的标识(0表示根节点)
+            console.log("arr=", arr);
+            const articelClassInfo = document.querySelector("#ArticelClassInfo");
+            let str = "";
+            for (let i = 0; i < arr.length; i++) {
+                str += `<option value=${arr[i].id}>${arr[i].articelClassName}</option>`;
+                for (let j = 0; j < arr[i].children.length; j++) {
+                    str += `<option value=${arr[i].children[j].id}>---${arr[i].children[j].articelClassName}</option>`;
+                }
+            }
+            articelClassInfo.innerHTML = str;
+
+
+        }
+    })
+
+
+    //添加文章
+    const btnOk = document.querySelector("#btnOk");
+    btnOk.addEventListener("click", function (e) {
+        e.preventDefault();
+        const addForm = document.querySelector("#addForm");
+        //隐藏文本域
+        const txtArticelContent = document.querySelector("#txtArticelContent");
+        //把富文本编辑中的内容赋值给隐藏的文本域
+        txtArticelContent.value = CKEDITOR.instances.ArticelContent.getData();
+        const data = serialize(addForm);
+        axios({
+            method: "post",
+            url: "/articelInfo/addArticel",
+            data
+        }).then(function ({ data: res }) {
+            if (res.code == 200) {
+                alert(res.message);
+                window.CloseOwnerWindow();
+                grid.reload();
+            }
+        })
+    })
+
+    function onCancel() {
+        window.CloseOwnerWindow();
+    }
+
+    //将数组中的数据转换成树形数据(使用递归算法)
+    function tranListToTreeData(list, rootValue) { // 0
+        var arr = [];
+        list.forEach((item) => {
+            if (item.parentId === rootValue) {
+                // 找到之后 就要去找 item 下面有没有子节点
+                const children = tranListToTreeData(list, item.id);
+                if (children.length) {
+                    // 如果children的长度大于0 说明找到了子节点
+                    item.children = children;
+                }
+                arr.push(item); // 将内容加入到数组中
+            }
+        });
+        return arr;
+    }
+
+</script>

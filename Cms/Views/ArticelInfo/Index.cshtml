@@ -1,0 +1,104 @@
+﻿@{
+    Layout = null;
+}
+<html>
+<head>
+    <script src="/lib/jquery/dist/jquery.js"></script>
+    <link href="/miniui/themes/default/miniui.css" type="text/css" rel="stylesheet" />
+    <link href="/miniui/themes/icons.css" type="text/css" rel="stylesheet" />
+    <link href="/miniui/themes/bootstrap/skin.css" type="text/css" rel="stylesheet" />
+    <script src="/miniui/miniui.js"></script>
+    <script src="/js/axios.min.js"></script>
+</head>
+<body>
+    <h1>文章信息管理</h1>
+
+    <div style="padding-bottom:5px;">
+
+        <span>文章标题：</span><input type="text" id="title" />
+        <span>文章作者：</span><input type="text" id="author" />
+        <input type="button" value="查找" onclick="search()" />
+
+    </div>
+    <div style="width:800px;">
+        <div class="mini-toolbar" style="border-bottom:0;padding:0px;">
+            <table style="width:100%;">
+                <tr>
+                    <td style="width:100%;">
+                        <a class="mini-button" iconCls="icon-add" onclick="add()">增加</a>
+                        <a class="mini-button" iconCls="icon-remove" onclick="remove()">删除</a>
+                        <a class="mini-button" iconCls="icon-add" onclick="crateAllPage()">一站静态化</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div id="datagrid1" class="mini-datagrid" style="width:60%;height:550px;" ajaxType="post" url="/articelInfo/getArticels"
+         idField="id" allowResize="true"
+         sizeList="[2,5,10,30]" pageSize="2"
+         showHeader="true" title="文章信息"
+         multiSelect="true"
+         allowCellEdit="true" allowCellSelect="true"
+         onmouseup="return datagrid1_onmouseup()">
+        <div property="columns">
+            <div type="indexcolumn"></div>
+            <div type="checkcolumn"></div>
+            <div field="id" width="120" headerAlign="center">编号</div>
+            <div field="title" width="120" headerAlign="center">文章标题</div>
+            <div field="className" align="right" width="100">文章类别</div>
+            <div field="author" width="100" allowSort="true">文章作者</div>
+            <div field="origin" width="100" headerAlign="center">文章来源</div>
+            <div field="createdDate" width="100" headerAlign="center">发布时间</div>
+            <div name="action" width="120" headerAlign="center" align="center" cellStyle="padding:0;" renderer="onActionRenderer">操作</div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    mini.parse();
+    var grid = mini.get("datagrid1");
+    grid.load();// 加载数据
+
+
+    function add() {
+        mini.open({
+            targetWindow: window,
+
+            url: "/articelInfo/showAdd",
+            title: "新增新闻", width: 800, height: 600,
+            onload: function () {
+
+            },
+            ondestroy: function (action) {
+
+                grid.reload();
+            }
+        });
+    }
+    function onActionRenderer(e) {
+        const record = e.record;
+        const articelId = record.id;
+        const year = record.createdDate.getFullYear();
+        const month = record.createdDate.getMonth() + 1;
+        const day = record.createdDate.getDate();
+        // console.log("articelId=",articelId);
+        const path = `/articelHtml/${year}/${month}/${day}/${articelId}.html`;
+        const s = `<a href=${path} target="_blank">详情</a>`;
+        return s;
+
+    }
+    // 一站静态化
+    function crateAllPage() {
+        if (confirm("确定要生成静态页面，这个比较耗时...")) {
+            axios({
+                method: "post",
+                url: "/articelInfo/createAllPage"
+            }).then(function ({ data: res }) {
+                if (res.code === 200) {
+                    alert("静态页生成完成");
+                }
+            })
+        }
+
+    }
+</script>

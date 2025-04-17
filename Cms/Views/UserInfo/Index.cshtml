@@ -1,0 +1,196 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Pagination 用户信息</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="/lib/jquery/dist/jquery.js"></script>
+    <link href="/miniui/themes/default/miniui.css" rel="stylesheet" type="text/css" />
+    <link href="/miniui/themes/icons.css" type="text/css" rel="stylesheet" />
+    <script src="/miniui/miniui.js"></script>
+    <meta http-equiv="Permissions-Policy" content="unload=(self)">
+
+</head>
+<body>
+    <h1>用户数据表格</h1>
+
+    <div style="padding-bottom:5px;">
+
+        <span>员工姓名：</span><input type="text" id="searchName" />
+        <span>员工邮箱：</span><input type="text" id="searchEmail" />
+        <input type="button" value="搜索" onclick="search()" />
+
+    </div>
+
+    <div style="width:800px;">
+        <div class="mini-toolbar" style="border-bottom:0;padding:0px;">
+            <table style="width:100%;">
+                <tr>
+                    <td style="width:100%;">
+                        <a class="mini-button" iconCls="icon-add" onclick="add()">增加</a>
+                        <a class="mini-button" iconCls="icon-remove" onclick="remove()">删除</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div id="datagrid1" class="mini-datagrid" style="width:880px;height:250px;"
+         url="/userinfo/getUsers" @*指明数据来源*@
+         idField="id" allowResize="true"
+         sizeList="[2,5,10,20]" pageSize="2"
+         showHeader="true" title="用户信息"
+         multiSelect="true"
+         onmouseup="return datagrid1_onmouseup()">
+        <div property="columns">
+            <div type="indexcolumn"></div>
+            <div type="checkcolumn"></div>
+            <div field="id" width="120" headerAlign="center" allowSort="true">编号</div>
+            <div field="userName" width="120" headerAlign="center">用户名</div>
+            <div field="userEmail" width="120" headerAlign="center">用户邮箱</div>
+            <div field="gender" width="100" renderer="onGenderRenderer" align="center" headerAlign="center">性别</div>
+            <div field="userPhone" align="right" width="100">手机号码</div>
+            <div field="photoUrl" width="100" renderer="onPhotoRender">头像</div>
+            <div name="action" width="120" headerAlign="center" align="center" renderer="onActionRenderer" cellStyle="padding:0;">操作</div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        mini.parse();
+
+        var grid = mini.get("datagrid1");
+
+        grid.load();
+
+        //处理性别
+        const Genders = [{ id: 0, text: '男' }, { id: 1, text: '女' }];
+        function onGenderRenderer(e) {
+            for (let i = 0, l = Genders.length; i < l; i++) {
+                let g = Genders[i];
+                if (g.id == e.value) return g.text;
+            }
+            return "";
+        }
+
+        function onPhotoRender(e) {
+            return `<img src=${e.value} width="100px"/>`
+        }
+        //搜索用户信息
+        function search() {
+            const uname = document.querySelector("#searchName").value;
+            const uemail = document.querySelector("#searchEmail").value;
+            grid.load({
+                uname,
+                uemail
+            });
+        }
+
+        //设置操作列表
+        function onActionRenderer(e) {
+            var record = e.record;
+            var uid = record.id;
+            var s = '<a class="Edit_Button" href="javascript:editRow(\'' + uid + '\')">编辑</a>' + '<a class="Delete_Button" href="javascript:delRow(\'' + uid + '\')">删除</a>';
+            return s;
+        }
+        //删除一条记录
+        function delRow(uid) {
+            if (confirm("确定要删除记录吗")) {
+                $.ajax({
+                    url: "/userInfo/deleteUser?uid=" + uid,
+                    method: "get",
+                    success: function (result) {
+                        console.log("result=", result);
+                        if (result.code == 200) {
+                            alert(result.message);
+                            //重新加载表格
+                            grid.load();
+                        }
+                    }
+                })
+            }
+        }
+
+        //删除多条记录
+        function remove() {
+
+            let rows = grid.getSelecteds();
+            console.log("rows=", rows)
+            if (rows.length > 0) {
+                if (confirm("确定删除选中记录？")) {
+                    let ids = [];
+                    for (let i = 0, l = rows.length; i < l; i++) {
+                        let r = rows[i];
+                        ids.push(r.id);
+                    }
+                    let id = ids.join(',');
+                    grid.loading("操作中，请稍后......");
+                    $.ajax({
+                        url: "/userInfo/deleteUsers?userId=" + id,
+                        success: function (result) {
+                            grid.reload();
+                        },
+                        error: function () {
+                        }
+                    });
+                }
+            } else {
+                alert("请选中一条记录");
+            }
+        }
+
+        //添加用户
+        function add() {
+
+            mini.open({
+                targetWindow: window,
+
+                url: "/userInfo/showAdd",
+                title: "新增员工", width: 800, height: 600,
+                onload: function () {
+
+                },
+                ondestroy: function (action) {
+
+                    grid.reload();
+                }
+            });
+        }
+
+        function editRow(userId) {
+            mini.open({
+                targetWindow: window,
+                url: "/userInfo/showEdit?userId=" + userId,
+                title: "编辑员工", width: 800, height: 600,
+                onload: function () {
+
+                },
+                ondestroy: function (action) {
+
+                    grid.reload();
+                }
+            });
+        }
+    </script>
+
+
+    <!--<script type="text/javascript">
+
+        mini.parse();
+
+        var grid = mini.get("datagrid1");
+
+        grid.load();
+
+
+
+
+    </script>-->
+
+
+</body>
+</html>

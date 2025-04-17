@@ -1,0 +1,220 @@
+﻿<!DOCTYPE htmls>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/ArticelTemplate/ArticelStyle.css ">
+    <script src="/js/axios.min.js"></script>
+
+</head>
+<body>
+   
+        <!--顶部布局-->
+        <div id="articelTop">
+            <!--顶部布局第一行-->
+            <div id="articelTop_one">
+                <div class="articelTop_oneleft">
+                    您好！admin,欢迎来到会员中心!【会员中心】【短消息0】【退出】
+                </div>
+                <div class="articelTop_oneRight">
+                    设为首页&nbsp;加入收藏&nbsp;网站地图
+                </div>
+            </div>
+            <!--顶部布局第一行结束-->
+            <div style="clear:both"></div>
+            <!--顶部布局第二行开始-->
+            <div id="articelTop_two">
+                <div class="articelTopImg">
+                    <img src="/ArticelTemplate/images/logo.gif" style="height:100px">
+                </div>
+                <div class="articelTopSearch">
+                    <input type="text" id="txtSearch" />
+                    <input type="button" value="搜索" id="txtBtnSearch" />
+                </div>
+            </div>
+            <!--顶部布局第二行结束-->
+            <div style="clear:both"></div>
+            <!--导航条布局-->
+            <div id="articelNav">
+                <ul>
+                    <li><a href="javascript:void(0)">首页</a></li>
+                    <li><a href="javascript:void(0)">新闻频道</a></li>
+                    <li><a href="javascript:void(0)">图片频道</a></li>
+                    <li><a href="javascript:void(0)">下载频道</a></li>
+                </ul>
+            </div>
+            <!--导航条布局结束-->
+        </div>
+        <!--顶部布局结束-->
+        <!--中间内容开始-->
+        <div id="articelContent">
+            <div id="articelContent_left">
+                <div id="articelContent_leftTop">
+                    您当前位置：
+                    <a href="javascript:void(0)">CMS</a> >>
+                    <a href="javascript:void(0)">新闻频道</a> >>
+                    <a href="javascript:void(0)">292959523595</a> >>
+                    <a href="javascript:void(0)">浏览文章</a>
+                </div>
+                <div id="articelContent_leftBttom">
+                    <h2>292959523595</h2>
+                    <div class="artcelTop"><span>时间:2015/9/14 23:58:07 </span><span>信息来源:不详</span>点击:<span>0</span> <span>【收藏此文】【字体：大 中 小】</span></div>
+                    <div id="splitLine"></div>
+                    $data.ArticleContent
+
+                    <!-------相关新闻------->
+                    <div id="articelContent_Same">
+                        <div class="articelContent_SameNew">相关新闻</div>
+                        <ul id="likeNewList">
+                        </ul>
+                    </div>
+                    <!-------相关新闻结束------->
+                    <br />
+                    <!----------评论展示----------------->
+                    <div id="articelComment">
+                        <div id="articelComment_top">
+                            <span style="font-size:20px;font-weight:bolder;display:block"> 我有话说</span>
+
+                            <span> 以下是对 <strong>[292959523595]</strong> 的评论,总共:1条评论</span>
+                        </div>
+                        <div id="articelComment_middle">
+                            <ul id="articelCommentList">
+                            </ul>
+                        </div>
+                        <div id="articelCommnet_bottome">
+                            <textarea style="font-size:14px;padding:5px;width:90%;height:90px;overflow:auto;" placeholder="文明上网，请对您的发言负责" id="commentMsg"></textarea>
+                            <input type="button" id="btnComment" style="float:right" value="发布评论" class="reply_btn" />
+                        </div>
+
+                    </div>
+                    <!----------评论展示结束----------------->
+                </div>
+
+            </div>
+            <!---中间内容右侧布局---->
+            <div id="articelContent_right">
+                <div id="hotArticel">
+                    <div class="newArticel_Title">
+                        <h3><span>最</span>新文章</h3>
+                    </div>
+                    <div id="newArticel_Content">
+                        <ul class="showUl">
+                            <li>
+                                <span class="spanData">1</span>
+                                <a href="javascript:void(0)">
+                                    <span style="color:green">[图文]</span>
+                                    啊啊啊啊
+                                </a>
+                                <span style="float:right"><img class="showImage" src="/ArticelTemplate/images/logo.gif"></span>
+                                <p style="padding-left:20px">啊啊啊啊......</p>
+                            </li>
+                            <li>
+                                <span class="spanData">2</span>
+                                <a href="javascript:void(0)">
+                                    <span style="color:green">[图文]</span>
+                                    啊啊啊啊
+                                </a>
+                                <span style="float:right"><img class="showImage" src="/ArticelTemplate/images/logo.gif"></span>
+                                <p style="padding-left:20px">啊啊啊啊......</p>
+                            </li>
+                            <li>
+                                <span class="spanData">3</span>
+                                <a href="javascript:void(0)">
+                                    <span style="color:green">[图文]</span>
+                                    啊啊啊啊
+                                </a>
+                                <span style="float:right"><img class="showImage" src="/ArticelTemplate/images/logo.gif"></span>
+                                <p style="padding-left:20px">啊啊啊啊......</p>
+                            </li>
+                        </ul>
+
+                    </div>
+
+                </div>
+            </div>
+            <!---中间内容右侧布局结束---->
+        </div>
+
+        <!--中间内容结束-->
+        <div id="articelBottom">
+
+            <div id="about">
+                <a href="javascript:void(0)">关于我们</a>
+                <a href="javascript:void(0)">联系我们</a>
+                <a href="javascript:void(0)">法律声明</a>
+                <a href="javascript:void(0)">人才招聘</a>
+                <a href="javascript:void(0)">免责声明</a>
+                <a href="javascript:void(0)">网站地图</a>
+                <a href="javascript:void(0)">友情链接</a>
+
+            </div>
+           
+        </div>
+  
+
+</body>
+</html>
+<script>
+    
+    loadComment();// 加载评论
+    const btnComment = document.querySelector("#btnComment");
+    const commentMsg = document.querySelector("#commentMsg");
+    btnComment.addEventListener("click", function (e) {
+        e.preventDefault();
+        addComment();
+    });
+    // 发布评论
+    function addComment() {
+        axios({
+            method: "post",
+            url: "/articelInfo/addComment",
+            data: {
+                msg: commentMsg.value,
+                articelId: 3
+            }
+        }).then(function ({ data: res }) {
+            if (res.code === 200) {
+                loadComment();//加载评论。
+                alert(res.message);
+            } else {
+                alert(res.message);
+            }
+        })
+    }
+    // 加载评论
+    function loadComment() {
+        axios({
+            method: "get",
+            url: "/articelInfo/loadComment?articelId=" + 3
+        }).then(function ({ data: res }) {
+            if (res.code === 200) {
+                const articelCommentList = document.querySelector("#articelCommentList");
+                const arr = res.data.map(item => {
+                    return `
+                      <li>${item.createdDate}:${item.msg}</li>
+                    `
+                });
+                console.log("arr=", arr);
+               
+                articelCommentList.innerHTML = arr.join('');
+            }
+        })
+    }
+
+    //统计文章访问次数
+    function articelCount() {
+        axios({
+            method: "post",
+            url: "/articelInfo/editAcount?articelId="+3,
+            //data: {
+            //    articelId:3
+            //}
+        }).then(function ({ data: res }) {
+            if (res.code == 200)
+            {
+                document.querySelector("#changes").innerHTML = res.changes;
+            }
+        })
+    }
+</script>
+

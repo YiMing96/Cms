@@ -1,0 +1,158 @@
+﻿@{
+    Layout = null;
+}
+@using Cms.Entity
+@model UserInfo
+<html>
+<head>
+    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    <link href="/miniui/themes/default/miniui.css" type="text/css" rel="stylesheet" />
+    <link href="/miniui/themes/icons.css" type="text/css" rel="stylesheet" />
+    <link href="/miniui/themes/bootstrap/skin.css" type="text/css" rel="stylesheet" />
+    <script src="/miniui/miniui.js"></script>
+    <script src="/js/form-serialize.js"></script> <!--这里需要引入form-serialize.js文件-->
+    <script src="/js/axios.min.js"></script>
+    <meta http-equiv="Permissions-Policy" content="unload=(self)">
+
+
+    <style>
+        .thumb-box {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .thumb {
+            width: 250px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <form id="form1">
+        <input type="hidden" name="PhotoUrl" id="imgUrl" value="@Model.PhotoUrl"/>
+        <input type="hidden" name="CreateData" value="@Model.CreatedDate" />
+        <input type="hidden" name="Id" value="@Model.Id" />
+        <div style="padding-left:11px;padding-bottom:5px;">
+            <table style="table-layout:fixed;">
+                <tr>
+                    <td style="width:90px;">用户姓名：</td>
+                    <td style="width:150px;">
+                        <input type="text" name="UserName" placeholder="请输入姓名" autocomplete="off" value="@Model.UserName"/>
+                    </td>
+                    <td style="width:90px;">用户密码</td>
+                    <td>
+                        <input type="password" name="UserPassword" placeholder="请输入密码" value="@Model.UserPassword"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:90px;">用户邮箱：</td>
+                    <td>
+                        <input type="text" name="UserEmail" placeholder="请输入邮箱" autocomplete="off" value="@Model.UserEmail"/>
+                    </td>
+                    <td style="width:90px;">手机号码：</td>
+                    <td>
+                        <input type="text" name="UserPhone" placeholder="请输入手机号码" autocomplete="off" value="@Model.UserPhone"/>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width:90px;">性别：</td>
+                    <td>
+                        <select name="gender" class="mini-radiobuttonlist">
+                            @{
+                                if (Model.Gender == 0)
+                                {
+                                    <option value="0" selected>男</option>
+                                    <option value="1">女</option>
+                                }
+                                else
+                                {
+                                    <option value="0" >男</option>
+                                    <option value="1" selected>女</option>
+                                }
+                            }
+                            
+                            
+                        </select>
+                    </td>
+                    <td>头像：</td>
+                    <td>
+                        <input class="mini-htmlfile" name="PhotoUrl" type="file" id="iptFile" accept="image/*" style="display:none" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:190px;">
+                        <button class="btn btn-primary" id="btnChoose">选择 & 上传图片</button>
+                    </td>
+                    <td>
+                        <div class="thumb-box">
+                            <!-- 头像 -->
+                            <img src="@Model.PhotoUrl" class="img-thumbnail thumb" alt="">
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div style="text-align:center;padding:10px;">
+            <mini-button onclick="onOk" style="width:60px;margin-right:20px;">确定</mini-button>
+            <mini-button onclick="onCancel" style="width:60px;">取消</mini-button>
+        </div>
+    </form>
+</body>
+</html>
+<script>
+    const iptFile = document.querySelector("#iptFile");
+    const btnChoose = document.querySelector("#btnChoose");
+    const thumb = document.querySelector(".thumb");
+    //上传头像
+    btnChoose.addEventListener("click", function (e) {
+        e.preventDefault();
+        iptFile.click();
+    });
+    iptFile.addEventListener("change", function () {
+        if (!this.files[0]) {
+            return;
+        }
+        const fd = new FormData();
+        fd.append("avator", this.files[0]);
+        axios({
+            url: "/userInfo/fileUpload",
+            data: fd,
+            method: "post"
+        }).then(function ({ data: res }) {
+            if (res.code == 200) {
+                thumb.src = res.dir;
+                //隐藏域，保存上传成功的头像路径
+                const imgUrl = document.querySelector("#imgUrl");
+                imgUrl.value = res.dir;
+            }
+        })
+    })
+    //编辑用户信息
+    function onOk() {
+        const form = document.querySelector("#form1");
+        const data = serialize(form);//js对象
+        axios({
+            method: "post",
+            url: "/userInfo/editUser",
+            data
+        }).then(function ({ data: res }) {
+            if (res.code = 200){
+                alert(res.message);
+                window.CloseOwnerWindow();
+                grid.reload();
+            }
+        })
+
+        
+
+    }
+
+    function onCancel() {
+        window.CloseOwnerWindow();
+    }
+</script>
